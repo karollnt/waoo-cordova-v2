@@ -1,0 +1,58 @@
+<div class="pages">
+  <div data-page="success" class="page no-toolbar no-navbar">
+    <div class="page-content">
+      <div class="navbarpages">
+        <div class="navbar_left"><a href="#" onclick="cargaPagina('index.html',0);"><img src="images/icons/blue/menu.png" alt="" title="" /></a></div>
+        <div class="navbar_center"><h2><a href="#" onclick="cargaPagina('index.html',0);"><img class="header-logo" src="images/logo.png" alt="waoo" /></a></h2></div>
+        <div class="navbar_right"><a href="#" data-panel="right" class="open-panel"><img src="images/icons/blue/user.png" alt="" title="" /></a></div>
+      </div>
+      <div id="pages_maincontent">
+        <div class="page_content">
+          <h2 class="">Recargar Waoo Tokens</h2>
+          <div class="row center-block">
+            <ul class="responsive_table">
+              <li class="table_row">
+                <span class="soft">Actualmente cuentas con  <span class="js-cantidad-tokens">0</span> tokens.</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <form class="js-pago-efectivo" method="post">
+              <div class="row center-block form-row m-t-10">
+                <p>
+                  Debes realizar una consignaci&oacute;n con los siguientes datos:<br>
+                  <b>Nombre del titular:</b> Asasas<br>
+                  <b>Banco:</b> Bancolombia<br>
+                  <b>N&uacute;mero de cuenta:</b> 77777777 (cuenta de ahorros)<br>
+                  Luego de realizarlo, toma una fotograf&iacute;a al soporte y subelo en este formulario.
+                </p>
+              </div>
+              <div class="form-row">
+                <div>Cantidad de tokens (1 token = $ 1000)</div>
+                <input type="number" name="valor" value="0" class="form_input required">
+              </div>
+              <div class="row form-row m-t-10">
+                <span>Soporte de pago</span>
+              </div>
+              <div class="row form-row m-t-10">
+                <input type="file" name="archivo" class="form_input">
+              </div>
+              <input type="hidden" name="efectivo" value="1">
+              <input type="hidden" name="user" class="js-user" value="">
+              <div class="form-group m-t-10">
+                <div class="row">
+                  <div class="col-50">
+                    <button type="submit" class="button btn-lg btn-block" data-loading-text="Procesando...">Aceptar</button>
+                  </div>
+                  <div class="col-50">
+                    <button type="button" class="button btn-block btn-lg" onclick="cargaPagina('index.html',0);">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
