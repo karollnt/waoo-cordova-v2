@@ -62,6 +62,7 @@
 										<!-- <li class="js-recharge"><a href="#" target="_blank" onclick="event.preventDefault(); window.open('http://www.waooapp.com/waoo/','_blank');"><img src="images/icons/blue/shop.png" alt="" title="" /><span>Waoo Tokens</span></a></li> -->
 									  <!-- <li class="js-recharge"><a href="#" onclick="cargaPagina('data/pasarela.html',9);"><img src="images/icons/blue/shop.png" alt="" title="" /><span>Waoo Tokens</span></a></li> -->
 									  <li><a href="#" onclick="cargaPagina('data/solicitudes.html',3);"><img src="images/icons/blue/form.png" alt="" title="" /><span>Mi Soluci&oacute;n</span></a></li>
+									  <li><a href="#" onclick="cargaPagina('data/videos.html',11);" class="external"><img src="images/icons/blue/video.png" alt="" title="" /><span>Streaming</span></a></li>
 									  <li><a href="#" onclick="cargaPagina('data/soporte.html',7);" class="external"><img src="images/icons/blue/phone.png" alt="" title="" /><span>Soporte</span></a></li>
 									  <li><a href="#" onclick="cargaPagina('data/editaperfil.html',4);"><img src="images/icons/blue/settings.png" alt="" title="" /><span>Configuraci&oacute;n</span></a></li>
 									  <li><a href="#" data-popup=".popup-login" class="open-popup"><img id="loginimg" src="images/icons/blue/user.png" alt="" title="" /><span id='loginsp'>Iniciar sesi&oacute;n</span></a></li>
@@ -92,8 +93,7 @@
 						<input type="submit" name="submit" class="form_submit" id="submit" value="Entrar" />
 					</form>
 					<div class="signup_bottom">
-						<p>No tienes una cuenta?</p>
-						<a href="#" data-popup=".popup-signup" class="open-popup">Reg&iacute;strate ac&aacute;!</a>
+						<p>¿Eres Estudiante? <a href="#" data-popup=".popup-signup" class="open-popup">Reg&iacute;strate ac&aacute;!</a></p>
 						<p>&nbsp;</p>
 						<p>Quieres ser un Tutor? <a href="#" data-popup=".popup-signup2" class="open-popup">Reg&iacute;strate ac&aacute;!</a></p>
 					</div>
@@ -141,8 +141,13 @@
 					<form id="RegisterForm2" method="post" enctype="multipart/form-data">
 						<div class="form_row">
 							<div class="form_row_icon"><img src="images/icons/blue/user.png" alt="" title="" /></div>
-							<input type="text" name="nickname" value="" class="form_input required js-assistant-reg" placeholder="nombre" />
+							<input type="text" name="nombre" value="" class="form_input required js-assistant-name" placeholder="nombre(s)" />
 						</div>
+						<div class="form_row">
+							<div class="form_row_icon"><img src="images/icons/blue/user.png" alt="" title="" /></div>
+							<input type="text" name="apellido" value="" class="form_input required" placeholder="apellido(s)" />
+						</div>
+						<input type="hidden" name="nickname" value="" class="js-assistant-reg"/>
 						<div class="form_row">
 							<div class="form_row_icon"><img src="images/icons/blue/contact.png" alt="" title="" /></div>
 							<input type="text" name="email" value="" class="form_input required" placeholder="email" />
@@ -150,14 +155,6 @@
 						<div class="form_row">
 							<div class="form_row_icon"><img src="images/icons/blue/lock.png" alt="" title="" /></div>
 							<input type="password" name="clave" value="" class="form_input required" placeholder="password" />
-						</div>
-						<div class="form_row">
-							<div class="form_row_icon"><img src="images/icons/blue/user.png" alt="" title="" /></div>
-							<input type="text" name="nombre" value="" class="form_input required" placeholder="segundo nombre" />
-						</div>
-						<div class="form_row">
-							<div class="form_row_icon"><img src="images/icons/blue/user.png" alt="" title="" /></div>
-							<input type="text" name="apellido" value="" class="form_input required" placeholder="apellido(s)" />
 						</div>
 						<div class="form_row">
 							<div class="form_row_icon"><img src="images/icons/blue/mobile.png" alt="" title="" /></div>
@@ -260,4 +257,3 @@
 		<script src="js/solicitudes.js"></script>
 	</body>
 </html>
-
