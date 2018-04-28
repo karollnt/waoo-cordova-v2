@@ -40,6 +40,7 @@ function cargarMateriaSelect(id){
         $.each(resp.materias,function(i,v){
           $("#"+id).append("<option value='"+v.id+"'>"+v.nombre+"</option>");
         });
+        $('.js-list-streaming').trigger('change');
       }
     },
     error: function(e) {
@@ -47,12 +48,6 @@ function cargarMateriaSelect(id){
     }
   });
 }
-
-
-
-
-
-
 
 function cargaSolicitudesUsuario(nickname){
   $.ajax({
@@ -542,7 +537,9 @@ function obtenerBToken() {
   });
   ajax.done(function (response) {
     if (response.bt_token != '') {
-      $('.js-bt-token').val(response);
+      $('.js-bt-token').val(response.bt_token);
+      $('.js-client-token').val(response.bt_token);
+      window.localStorage.setItem('bt_token', response.bt_token);
       $('.js-use-saved-card').removeClass('hide');
     }
   });
@@ -552,7 +549,8 @@ function pagarConGuardada(event) {
   var data = {
     amount: $('.js-checkout-total').val(),
     token: $('.js-bt-token').val(),
-    nickname: $('.js-nickname').val()
+    nickname: $('.js-nickname').val(),
+    idpreciotrabajo: $('.js-id-solicitud').val()
   };
   var ajax = $.ajax({
     type: 'post',
@@ -574,7 +572,7 @@ function pagarConGuardada(event) {
   })
   .fail(function (e) {
     alert('Error: ' + e.message);
-  });;
+  });
 }
 
 
@@ -586,7 +584,8 @@ function efectuarPagoBT(token) {
   var data = {
     amount: $('.js-checkout-total').val(),
     token: token,
-    nickname: $('.js-nickname').val()
+    nickname: $('.js-nickname').val(),
+    idpreciotrabajo: $('.js-id-solicitud').val()
   };
   var ajx = $.ajax({
     type: 'post',
@@ -804,3 +803,142 @@ function mostrarComentariosTutor(id,capa){
     }
   });
 }
+
+function crearTutoria(event) {
+  event.preventDefault();
+  var form = $(event.target);
+  var nickname = window.localStorage.getItem("nickname");
+  $(".js-nickname-tutor").val(nickname);
+  var titulo = $.trim($('.js-titulo').val());
+  var desc = $.trim($('.js-descripcion').val());
+  var valor = $.trim($('.js-value-per-student').val());
+  var link = $.trim($('.js-link').val());
+  if (titulo != '' && desc != '' && valor != '' && link != '') {
+    var ajax = $.ajax({
+      type: "post",
+      url: waooserver + "/solicitudes/crearTutoria",
+      dataType: "json",
+      data: form.serialize()
+    });
+    ajax.done(function (response) {
+      if (json.msg == 'ok') {
+        cargaPagina('data/success.html');
+      } else {
+        alert(json.msg);
+      }
+    });
+  }
+  else {
+    alert("Por favor, proporciona un tema, una descripcion, un enlace y un valor para tu tutoria");
+  }
+}
+
+function listarTutorias(idmateria) {
+  var streamingContainer = $('.js-streaming-list');
+  streamingContainer.html('Procesando ...');
+  var ajax = $.ajax({
+    type: "post",
+    url: waooserver + "/solicitudes/listarTutoriasMateria",
+    dataType: "json",
+    data: { idmateria: idmateria }
+  });
+  ajax.done(function (response) {
+    var html = '<div>';
+    if (response.tutorias) {
+      html += '<ul>';
+      for (var i = 0; i < response.tutorias.length; i++) {
+        var tutoria = response.tutorias[i];
+        html += '<li>' +
+          '<h3>' + tutoria.tema + '</h3>' +
+          '<time>' + tutoria.fecha + '</time>' +
+          '<p>' + tutoria.descripcion + '</p>' +
+          '<span>$ ' + tutoria.valor + '</span>' +
+          '<div><button class="btn btn-primary btn-lg btn-block js-show-streaming-details" data-id="' + tutoria.id + '">Ver detalles</button></div>' +
+        '</li>';
+      }
+      html += '</ul>';
+    }
+    html += '</div>';
+    streamingContainer.html(html);
+  });
+}
+
+function verDetalleTutoria(event) {
+  var element = $(event.target)
+  var idTutoria = element.data('id');
+  $.ajax({
+    type: 'post',
+    url: waooserver + "/solicitudes/verDetalleTutoria",
+    dataType: "json",
+    data: { id: idTutoria },
+    success: function (resp) {
+      var detailsContainer = $('.js-details');
+      if (resp.error) $("#" + iddiv).html("<div class='alert alert-danger'>" + resp.error + "</div>");
+      else {
+        $("#" + iddiv).html("<ul class='shop_items'></ul>");
+        if (resp.msg == "No hay ofertas") $("#" + iddiv).html("<div class='alert alert-danger'>" + resp.msg + "</div>");
+        else {
+          var json = JSON.parse('[' + resp.msg + ']');
+          var html = "";
+          $.each(json, function (i2, v) {
+            var calificacion = formatRound(v.calificacion, 2);
+            html += ("<li>"
+              + "<div class='shop_thumb' style='position:initial !important;'><img class='js-shop-thumb-" + v.asistente + "' src=''></div>"
+              + "<div class='shop_item_details'>"
+              + "<h4 style='position:initial !important;'>"
+              + "<a href='#'>" + v.asistente + "</a> "
+              + "<span class='stars' title='" + calificacion + "'>" + calificacion + "</span> "
+              + "<span>(" + calificacion + ")</span>"
+              + "</h4>"
+              + "<h4 class='shop_item_price' style='position:initial !important;'>Precio: <b>$ " + v.valor + "</b></h4>"
+              + "<div class='custom-accordion accordion-list'>"
+              + "<div class='accordion-item'>"
+              + "<div class='accordion-item-toggle'>"
+              + "<i class='icon icon-plus'>+</i>"
+              + "<i class='icon icon-minus'>-</i>"
+              + "<span>Datos adicionales</span>"
+              + "</div>"
+              + "<div class='accordion-item-content'>"
+              + "<h4 class='shop_item_price' style='position:initial !important;'>Institucion: </h4><span>" + v.institucion + "</span>"
+              + "<h4 class='shop_item_price' style='position:initial !important;'>Nivel Educativo: </h4><span>" + v.nivel + "</span>"
+              + "</div>"
+              + "</div>"
+              + "<div class='accordion-item'>"
+              + "<div class='accordion-item-toggle'>"
+              + "<i class='icon icon-plus'>+</i>"
+              + "<i class='icon icon-minus'>-</i>"
+              + "<span>Experiencia</span>"
+              + "</div>"
+              + "<div class='accordion-item-content'>"
+              + "<p>" + v.descripcion + "</p>"
+              + "</div>"
+              + "</div>"
+              + "<div class='accordion-item'>"
+              + "<div class='accordion-item-toggle'>"
+              + "<i class='icon icon-plus'>+</i>"
+              + "<i class='icon icon-minus'>-</i>"
+              + "<span>Comentarios</span>"
+              + "</div>"
+              + "<div class='accordion-item-content'>"
+              + "<div id='com" + i2 + "' class='assistant-comments'></div>"
+              + "</div>"
+              + "</div>"
+              + "</div>"
+              + "</div>"
+              + "<div>"
+              + "<a id='addtocart' style='cursor:pointer;' onclick='aceptarOferta(" + v.id + "," + v.valor + ");'>ACEPTAR</a>"
+              + "</div>"
+              + "</li>");
+            colocarAvatarOf(".js-shop-thumb-" + v.asistente, v.asistente);
+            mostrarComentariosTutor(v.idasistente, i2);
+          });
+          $("#" + iddiv + " ul").html(html);
+          $('.stars').stars();
+        }
+      }
+    },
+    error: function (e) {
+      $("#" + iddiv).html(e.message);
+    }
+  });
+}bt
