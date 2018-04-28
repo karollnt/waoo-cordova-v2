@@ -34,7 +34,9 @@ function cargaPagina(url,num,params){
   params = typeof params !== 'undefined' ? params : {};
 	if(!loggedin) myApp.popup(".popup-login");
 	else{
-		mainView.router.loadPage(url+"?"+(Math.floor((Math.random() * 1000) + 1)));
+		if (num != 11) {
+			mainView.router.loadPage(url + "?" + (Math.floor((Math.random() * 1000) + 1)));
+		}
     switch (num) {
       case 0:
         setTimeout(function(){verifcarga();},1000);
@@ -175,6 +177,41 @@ function cargaPagina(url,num,params){
       default:
         break;
     }
+		
+	case 11:
+		$.ajax({
+			type: "post",
+			url: waooserver + "/usuarios/tipoUsuario",
+			dataType: "json",
+			data: { nickname: loggedin },
+			success: function (resp) {
+				if (resp.error) alert('Error: ' + resp.error);
+				else {
+					if (resp.tipo == 2) {
+						mainView.router.loadPage(url + "?" + (Math.floor((Math.random() * 1000) + 1)));
+						setTimeout(function () {
+							cargarMateriaSelect("materia");
+							llenarSelectAnio('#anio');
+							llenarSelectMes2('#mes');
+							llenarSelectDias('#dia');
+							llenarSelectHoras('#hora');
+							llenarSelectMinutos('#minutos');
+							$('#creartutoria').on('submit', crearTutoria);
+						}, 1000);
+						break;
+					} else if (resp.tipo == 1) {
+						mainView.router.loadPage('data/listarstreaming.html' + "?" + (Math.floor((Math.random() * 1000) + 1)));
+						$('.js-list-streaming').on('change', function (e) {
+							listarTutorias($(this).val());
+						});
+						setTimeout(function () {
+							cargarMateriaSelect("materia");
+						}, 1000);
+						break;
+					}
+				}
+			}
+		});
 	}
 }
 
@@ -280,7 +317,21 @@ jQuery(document).ready(function() {
   	register2();
   	return false;
   });
-
+	$('#ForgotForm').on('submit', function (event) {
+		event.preventDefault();
+		$('.signup_bottom').html('Procesando ...');
+		var ajax = $.ajax({
+			type: 'POST',
+			url: waooserver + '/usuarios/forgotPassword',
+			dataType: 'json',
+			data: { email: $(event.target).find('.form_input').val() }
+		});
+		ajax.done(function (response) {
+			$('.signup_bottom').html(response.message);
+		}).fail(function (response) {
+			$('.signup_bottom').html('Hubo un problema y no se pudo procesar la solicitud, intente mas tarde');
+		});
+	});
 	cargarBancoSelect("banco");
 	listaChecksMateria("matsreg");
   $(document).off('submit','.js-pago-efectivo').on('submit','.js-pago-efectivo',procesaPagoEfectivo);
