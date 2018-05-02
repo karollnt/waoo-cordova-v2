@@ -29,115 +29,115 @@ var mainView = myApp.addView('.view-main', {
   dynamicNavbar: false
 });
 
-function cargaPagina(url,num,params){
+function cargaPagina(url, num, params) {
 	var loggedin = window.localStorage.getItem("nickname");
-  params = typeof params !== 'undefined' ? params : {};
-	if(!loggedin) myApp.popup(".popup-login");
-	else{
+	params = typeof params !== 'undefined' ? params : {};
+	if (!loggedin) myApp.popup(".popup-login");
+	else {
 		if (num != 11) {
 			mainView.router.loadPage(url + "?" + (Math.floor((Math.random() * 1000) + 1)));
 		}
-    switch (num) {
-      case 0:
-        setTimeout(function(){verifcarga();},1000);
-        break;
-      case 2:
-        $.ajax({
-          type: "post",
-          url: waooserver+"/usuarios/tipoUsuario",
-          dataType: "json",
-          data: {nickname:loggedin},
-          success: function(resp) {
-            if(resp.error) alert('Error: ' + resp.error);
-            else{
-              if(resp.tipo==2) listarSolicitudesSinAsignarDiv("dirpc");
-              else if(resp.tipo==1){
-                setTimeout(function(){
-                 cargarMateriaSelect("materia");
-                  // obtener_datos("materia");
-                  llenarSelectAnio('#anio');
-                  llenarSelectMes2('#mes');
-                  llenarSelectDias('#dia');
-                  llenarSelectHoras('#hora');
-                  llenarSelectMinutos('#minutos');
-                  $('#creasolicitud').on('submit', function(e) {
-                    e.preventDefault();
-                    creasolicitud();
-                    return false;
-                  });
-                  $("#lista_tareas").click(function () {
-                    var id = $('input:radio[name=idmateria]:checked').val();
-                    buscar_nombre_seleccionado(id);
-                    $("#lista_tareas").hide('fast');
-                  });
-                  $( "#lista").keyup(function() {
-                    dato = $("#lista").val().trim();
-                    if (dato.trim().length!=0) {
-                      validar_existe(dato);
-                      return false;
-                    }
-                    else{
-                      $("#lista_tareas").html('');
-                      $("#lista_tareas").hide('fast');
-                      return false;
-                    }
-                  });
-                },1000);
-              }
-            }
-          },
-          error: function(e) {
-            alert('Error: ' + e.message);
-          }
-        });
-        break;
-      case 3:
-        setTimeout(function(){
-          if (params.id) {
-            if (params.isAssistant) {
-              listarSolicitudesSinAsignarDiv('dirpc');
-            }
-            else {
-              cargaSolicitudesUsuario(loggedin);
-            }
-            setTimeout(function () {
-              if (params.isAssistant) {
-                verDetalleSolicitud(params.id,'detsols_'+params.id,1);
-              }
-              else if (params.viewSolution) {
-                verDetalleSolicitud(params.id,'detsols_'+params.id,1);
-              }
-              else {
-                verDetalleSolicitud(params.id,'detsols_'+params.id);
-              }
-            },1000);
-          }
-          else {
-            cargaSolicitudesUsuario(loggedin);
-          }
-        },1000);
-        break;
-      case 4:
-        setTimeout(function(){cargarDatosUsuario();},1000);
-        break;
-      case 5:
-        setTimeout(function(){listarNotificacionesSinLeer();},1000);
-        break;
-      case 6:
-        misendbird.setAssistant(window.localStorage.getItem("nickname"));
-        misendbird.obtenerDireccionCanalChat();
-        break;
-      case 7:
-        misendbird.init(1);
-        break;
-      case 8:
-        setTimeout(function(){historialTrabajosAceptados();},1000);
-        break;
-      case 9:
-        setTimeout(function(){consultarTokens();},1000);
-        break;
-      case 10:
-        setTimeout(function(){
+		switch (num) {
+			case 0:
+				setTimeout(function () { verifcarga(); }, 1000);
+				break;
+			case 2:
+				$.ajax({
+					type: "post",
+					url: waooserver + "/usuarios/tipoUsuario",
+					dataType: "json",
+					data: { nickname: loggedin },
+					success: function (resp) {
+						if (resp.error) alert('Error: ' + resp.error);
+						else {
+							if (resp.tipo == 2) listarSolicitudesSinAsignarDiv("dirpc");
+							else if (resp.tipo == 1) {
+								setTimeout(function () {
+									cargarMateriaSelect("materia");
+									// obtener_datos("materia");
+									llenarSelectAnio('#anio');
+									llenarSelectMes2('#mes');
+									llenarSelectDias('#dia');
+									llenarSelectHoras('#hora');
+									llenarSelectMinutos('#minutos');
+									$('#creasolicitud').on('submit', function (e) {
+										e.preventDefault();
+										creasolicitud();
+										return false;
+									});
+									$("#lista_tareas").click(function () {
+										var id = $('input:radio[name=idmateria]:checked').val();
+										buscar_nombre_seleccionado(id);
+										$("#lista_tareas").hide('fast');
+									});
+									$("#lista").keyup(function () {
+										dato = $("#lista").val().trim();
+										if (dato.trim().length != 0) {
+											validar_existe(dato);
+											return false;
+										}
+										else {
+											$("#lista_tareas").html('');
+											$("#lista_tareas").hide('fast');
+											return false;
+										}
+									});
+								}, 1000);
+							}
+						}
+					},
+					error: function (e) {
+						alert('Error: ' + e.message);
+					}
+				});
+				break;
+			case 3:
+				setTimeout(function () {
+					if (params.id) {
+						if (params.isAssistant) {
+							listarSolicitudesSinAsignarDiv('dirpc');
+						}
+						else {
+							cargaSolicitudesUsuario(loggedin);
+						}
+						setTimeout(function () {
+							if (params.isAssistant) {
+								verDetalleSolicitud(params.id, 'detsols_' + params.id, 1);
+							}
+							else if (params.viewSolution) {
+								verDetalleSolicitud(params.id, 'detsols_' + params.id, 1);
+							}
+							else {
+								verDetalleSolicitud(params.id, 'detsols_' + params.id);
+							}
+						}, 1000);
+					}
+					else {
+						cargaSolicitudesUsuario(loggedin);
+					}
+				}, 1000);
+				break;
+			case 4:
+				setTimeout(function () { cargarDatosUsuario(); }, 1000);
+				break;
+			case 5:
+				setTimeout(function () { listarNotificacionesSinLeer(); }, 1000);
+				break;
+			case 6:
+				misendbird.setAssistant(window.localStorage.getItem("nickname"));
+				misendbird.obtenerDireccionCanalChat();
+				break;
+			case 7:
+				misendbird.init(1);
+				break;
+			case 8:
+				setTimeout(function () { historialTrabajosAceptados(); }, 1000);
+				break;
+			case 9:
+				setTimeout(function () { consultarTokens(); }, 1000);
+				break;
+			case 10:
+				setTimeout(function () {
           /*mercpagoui.initEvents();
           llenarSelectMes('.js-expirationMonth');
           llenarSelectAnio('.js-expirationYear');
@@ -149,9 +149,9 @@ function cargaPagina(url,num,params){
 					} catch (error) {
 						console.log(error);
 					}
-          $('.js-id-solicitud').val(params.idpreciotrabajo);
-          $('.js-checkout-total').val(params.valor);
-          $('.js-nickname').val(window.localStorage.getItem('nickname'));
+					$('.js-id-solicitud').val(params.idpreciotrabajo);
+					$('.js-checkout-total').val(params.valor);
+					$('.js-nickname').val(window.localStorage.getItem('nickname'));
 					$('.js-client-token').val(window.localStorage.getItem('bt_token'));
 					obtenerBToken();
           /*if (params.tokens) {
@@ -172,46 +172,45 @@ function cargaPagina(url,num,params){
               });
             })(params);
           }*/
-        },1000);
-        break;
-      default:
-        break;
-    }
-		
-	case 11:
-		$.ajax({
-			type: "post",
-			url: waooserver + "/usuarios/tipoUsuario",
-			dataType: "json",
-			data: { nickname: loggedin },
-			success: function (resp) {
-				if (resp.error) alert('Error: ' + resp.error);
-				else {
-					if (resp.tipo == 2) {
-						mainView.router.loadPage(url + "?" + (Math.floor((Math.random() * 1000) + 1)));
-						setTimeout(function () {
-							cargarMateriaSelect("materia");
-							llenarSelectAnio('#anio');
-							llenarSelectMes2('#mes');
-							llenarSelectDias('#dia');
-							llenarSelectHoras('#hora');
-							llenarSelectMinutos('#minutos');
-							$('#creartutoria').on('submit', crearTutoria);
-						}, 1000);
-						break;
-					} else if (resp.tipo == 1) {
-						mainView.router.loadPage('data/listarstreaming.html' + "?" + (Math.floor((Math.random() * 1000) + 1)));
-						$('.js-list-streaming').on('change', function (e) {
-							listarTutorias($(this).val());
-						});
-						setTimeout(function () {
-							cargarMateriaSelect("materia");
-						}, 1000);
-						break;
+				}, 1000);
+				break;
+			case 11:
+				$.ajax({
+					type: "post",
+					url: waooserver + "/usuarios/tipoUsuario",
+					dataType: "json",
+					data: { nickname: loggedin },
+					success: function (resp) {
+						if (resp.error) alert('Error: ' + resp.error);
+						else {
+							if (resp.tipo == 2) {
+								mainView.router.loadPage(url + "?" + (Math.floor((Math.random() * 1000) + 1)));
+								setTimeout(function () {
+									cargarMateriaSelect("materia");
+									llenarSelectAnio('#anio');
+									llenarSelectMes2('#mes');
+									llenarSelectDias('#dia');
+									llenarSelectHoras('#hora');
+									llenarSelectMinutos('#minutos');
+									$('#creartutoria').on('submit', crearTutoria);
+								}, 1000);
+								
+							} else if (resp.tipo == 1) {
+								mainView.router.loadPage('data/listarstreaming.html' + "?" + (Math.floor((Math.random() * 1000) + 1)));
+								$('.js-list-streaming').on('change', function (e) {
+									listarTutorias($(this).val());
+								});
+								setTimeout(function () {
+									cargarMateriaSelect("materia");
+								}, 1000);
+								
+							}
+						}
 					}
-				}
-			}
-		});
+				});
+			default:
+				break;
+		}
 	}
 }
 
