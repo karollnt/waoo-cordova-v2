@@ -38,7 +38,8 @@ function cargaPagina(url, num, params) {
 			mainView.router.loadPage(url + "?" + (Math.floor((Math.random() * 1000) + 1)));
 		}
 		switch (num) {
-			case 0:
+      case 0:
+        card = null;
 				setTimeout(function () { verifcarga(); }, 1000);
 				break;
 			case 2:
@@ -207,7 +208,23 @@ function cargaPagina(url, num, params) {
 							}
 						}
 					}
-				});
+        });
+        break;
+      case 12:
+        setTimeout(function() {
+          try {
+            card = elements.create('card', { hidePostalCode: true });
+            card.mount('#card-element');
+          } catch (error) {
+            console.log(error);
+          }
+          $('.js-id-solicitud').val(params.idTutoria);
+          $('.js-checkout-total').val(params.valor);
+          $('.js-nickname').val(window.localStorage.getItem('nickname'));
+          $('.js-client-token').val(window.localStorage.getItem('bt_token'));
+          obtenerBToken();
+        }, 1000);
+        break;
 			default:
 				break;
 		}
@@ -397,7 +414,17 @@ jQuery(document).ready(function() {
 			}
 			efectuarPagoBT(result.token.id);
 		});
-	});
+  }).on('submit', '.js-payment-form-tutoria', function (ev) {
+    ev.preventDefault();
+    var promise = stripe.createToken(card);
+    promise.then(function (result) {
+      if (result.error) {
+        alert(result.error.message);
+        return;
+      }
+      efectuarPagoTutoria(result.token.id);
+    });
+  });
 
 	$(document).on('click', '.js-pay-with-saved-card', pagarConGuardada);
 

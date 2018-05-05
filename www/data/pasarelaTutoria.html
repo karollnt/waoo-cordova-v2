@@ -1,0 +1,45 @@
+<div class="pages">
+  <div data-page="success" class="page no-toolbar no-navbar">
+    <div class="page-content">
+      <div class="navbarpages">
+        <div class="navbar_left"><a href="#" onclick="cargaPagina('index.html',0);"><img src="images/icons/blue/menu.png" alt="" title="" /></a></div>
+        <div class="navbar_center"><h2><a href="#" onclick="cargaPagina('index.html',0);"><img class="header-logo" src="images/logo.png" alt="waoo" /></a></h2></div>
+        <div class="navbar_right"><a href="#" data-panel="right" class="open-panel"><img src="images/icons/blue/user.png" alt="" title="" /></a></div>
+      </div>
+      <div id="pages_maincontent">
+        <div class="page_content">
+          <h2 class="">Proceder a pago</h2>
+          <div class="row center-block">
+            <ul class="responsive_table">
+              <li class="table_row">
+                 <span style = "display : none "class="soft" id='cantidad-tokens'>Actualmente cuentas con  <span class="js-cantidad-tokens">0</span> pesos.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="m-b-10 soft--bottom">
+            <div class="m-b-10">
+              <label for="amount" class="heading">Valor</label>
+            </div>
+            <input type="text" name="amount" id="amount" class="js-checkout-total form_input" readonly>
+          </div>
+          <div class="m-b-10 soft--bottom hide js-use-saved-card">
+            <button class="button btn-lg btn-block m-b-10 js-pay-with-saved-card">Pagar con la misma tarjeta</button>
+            <div class="soft--top">
+              <p class="centered-or">O utiliza otra tarjeta</p>
+            </div>
+          </div>
+          <input type="hidden" value="" class="js-bt-token">
+          <form method="post" class="js-payment-form-tutoria" action="">
+            <div id="card-element" class="m-b-10"></div>
+            <input type="hidden" class="js-id-solicitud" value="0" name="id">
+            <input type="hidden" class="js-nickname" value="" name="nickname">
+            <button class="button btn-lg btn-block" type="submit">
+              <span>Enviar</span>
+            </button>
+          </form>
+          <p>Al verificar el pago se le enviara el acceso a la tutoria al correo con el que se encuentra registrado</p>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>

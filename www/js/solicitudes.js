@@ -837,7 +837,7 @@ function listarTutorias(idmateria) {
   var streamingContainer = $('.js-streaming-list');
   streamingContainer.html('Procesando ...');
   var ajax = $.ajax({
-    type: "post",
+    type: "get",
     url: waooserver + "/solicitudes/listarTutoriasMateria",
     dataType: "json",
     data: { idmateria: idmateria }
@@ -867,7 +867,7 @@ function verDetalleTutoria(event) {
   var element = $(event.target)
   var idTutoria = element.data('id');
   $.ajax({
-    type: 'post',
+    type: 'get',
     url: waooserver + "/solicitudes/verDetalleTutoria",
     dataType: "json",
     data: { id: idTutoria },
@@ -926,7 +926,7 @@ function verDetalleTutoria(event) {
               + "</div>"
               + "</div>"
               + "<div>"
-              + "<a id='addtocart' style='cursor:pointer;' onclick='aceptarOferta(" + v.id + "," + v.valor + ");'>ACEPTAR</a>"
+              + "<a id='addtocart' style='cursor:pointer;' onclick='registrarseParaTutoria(" + v.id + "," + v.valor + ");'>ACEPTAR</a>"
               + "</div>"
               + "</li>");
             colocarAvatarOf(".js-shop-thumb-" + v.asistente, v.asistente);
@@ -941,4 +941,33 @@ function verDetalleTutoria(event) {
       $("#" + iddiv).html(e.message);
     }
   });
-}bt
+}
+
+function registrarseParaTutoria(id, valor) {
+  cargaPagina('data/pasarelaTutoria.html', 12, { idTutoria: id, valor: valor });
+}
+
+function efectuarPagoTutoria(token) {
+  var data = {
+    amount: $('.js-checkout-total').val(),
+    token: token,
+    nickname: $('.js-nickname').val(),
+    id: $('.js-id-solicitud').val()
+  };
+  var ajx = $.ajax({
+    type: 'post',
+    url: waooserver + '/solicitudes/procesarPagoTutoria',
+    dataType: 'json',
+    data: data
+  });
+  ajx.done(function (resp) {
+    if (resp.msg.indexOf('Pago recibido satisfactoriamente') > -1) {
+      cargaPagina('data/success.html');
+    } else {
+      alert(resp.msg);
+    }
+  })
+  .fail(function (e) {
+    alert('Error: ' + e.message);
+  });
+}
