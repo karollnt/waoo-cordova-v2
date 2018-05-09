@@ -844,12 +844,13 @@ function listarTutorias(idmateria) {
   });
   ajax.done(function (response) {
     var html = '<div>';
-    if (response.tutorias) {
+    if (response.streaming) {
       html += '<ul>';
-      for (var i = 0; i < response.tutorias.length; i++) {
-        var tutoria = response.tutorias[i];
+      var streamingList = JSON.parse(response.streaming);
+      for (var i = 0; i < streamingList.length; i++) {
+        var tutoria = streamingList[i];
         html += '<li>' +
-          '<h3>' + tutoria.tema + '</h3>' +
+          '<h3>' + tutoria.titulo + '</h3>' +
           '<time>' + tutoria.fecha + '</time>' +
           '<p>' + tutoria.descripcion + '</p>' +
           '<span>$ ' + tutoria.valor + '</span>' +
