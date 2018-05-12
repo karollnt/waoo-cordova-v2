@@ -15,8 +15,8 @@ var elements = stripe.elements();
 var card;
 
 //backend server address
-var waooserver = "http://waoo.herokuapp.com";
-// var waooserver = "http://localhost/waoobackend";
+// var waooserver = "http://waoo.herokuapp.com";
+var waooserver = "http://localhost/waoobackend";
 //para notificaciones
 var tareanotificaciones = null;
 
@@ -198,9 +198,6 @@ function cargaPagina(url, num, params) {
 								
 							} else if (resp.tipo == 1) {
 								mainView.router.loadPage('data/listarstreaming.html' + "?" + (Math.floor((Math.random() * 1000) + 1)));
-								$('.js-list-streaming').on('change', function (e) {
-									listarTutorias($(this).val());
-								});
 								setTimeout(function () {
 									cargarMateriaSelect("materia");
 								}, 1000);
@@ -355,6 +352,12 @@ jQuery(document).ready(function() {
   $.fn.raty.defaults.path = './images';
   cargarNivelesSelect('nivel');
 
+  $(document)
+    .on('change', '.js-list-streaming', function (e) {
+      listarTutorias($(this).val());
+    })
+    .on('click', '.js-show-streaming-details', verDetalleTutoria);
+
 	$(".logo").animate({'top': '20px'},'slow',"easeInOutCirc");
 	$(".cartitems").delay(1000).animate({'width': '30px', 'height': '30px', 'top':'10px', 'right':'10px', 'opacity':1},1000,"easeOutBounce");
 	$(".main-nav ul > li")
@@ -426,7 +429,9 @@ jQuery(document).ready(function() {
     });
   });
 
-	$(document).on('click', '.js-pay-with-saved-card', pagarConGuardada);
+  $(document)
+    .on('click', '.js-pay-with-saved-card', pagarConGuardada)
+    .on('click', '.js-pay-with-saved-card-tutoria', pagarConGuardadaTutoria);
 
 });
 

@@ -786,6 +786,9 @@ function mostrarComentariosTutor(id,capa){
     dataType: "json",
     data: {id: id},
     success: function(data) {
+      if (!data.comen) {
+        return;
+      }
       var html = "<div><ul>";
       for (var i = 0; i <= data.comen.length-1; i++) {
         html += "<li>"
@@ -858,6 +861,8 @@ function listarTutorias(idmateria) {
         '</li>';
       }
       html += '</ul>';
+    } else {
+      html += '<p>No se encontraron tutorias</p>';
     }
     html += '</div>';
     streamingContainer.html(html);
@@ -867,24 +872,30 @@ function listarTutorias(idmateria) {
 function verDetalleTutoria(event) {
   var element = $(event.target)
   var idTutoria = element.data('id');
+  var containerSelector = '.js-streaming-detail';
+  var container = $(containerSelector);
   $.ajax({
     type: 'get',
-    url: waooserver + "/solicitudes/verDetalleTutoria",
+    url: waooserver + "/solicitudes/verDetallesTutoria",
     dataType: "json",
     data: { id: idTutoria },
     success: function (resp) {
       var detailsContainer = $('.js-details');
-      if (resp.error) $("#" + iddiv).html("<div class='alert alert-danger'>" + resp.error + "</div>");
+      if (resp.error) container.html("<div class='alert alert-danger'>" + resp.error + "</div>");
       else {
-        $("#" + iddiv).html("<ul class='shop_items'></ul>");
-        if (resp.msg == "No hay ofertas") $("#" + iddiv).html("<div class='alert alert-danger'>" + resp.msg + "</div>");
+        container.html("<ul class='shop_items'></ul>");
+        if (resp.msg == "No hay ofertas") container.html("<div class='alert alert-danger'>" + resp.msg + "</div>");
         else {
           var json = JSON.parse('[' + resp.msg + ']');
           var html = "";
           $.each(json, function (i2, v) {
             var calificacion = formatRound(v.calificacion, 2);
             html += ("<li>"
-              + "<div class='shop_thumb' style='position:initial !important;'><img class='js-shop-thumb-" + v.asistente + "' src=''></div>"
+              + "<div class='shop_thumb' style='position:initial !important;'>"
+              + "<img class='js-shop-thumb-" + v.asistente + "' src=''><br>"
+              + "<h3>" + v.titulo + "</h3>"
+              + "<p>" + v.descripcionTutoria + "</p>"
+              + "</div>"
               + "<div class='shop_item_details'>"
               + "<h4 style='position:initial !important;'>"
               + "<a href='#'>" + v.asistente + "</a> "
@@ -933,13 +944,16 @@ function verDetalleTutoria(event) {
             colocarAvatarOf(".js-shop-thumb-" + v.asistente, v.asistente);
             mostrarComentariosTutor(v.idasistente, i2);
           });
-          $("#" + iddiv + " ul").html(html);
+          container.find('ul').html(html);
           $('.stars').stars();
+          $('html,body').animate({
+            scrollTop: 0
+          }, 'slow');
         }
       }
     },
     error: function (e) {
-      $("#" + iddiv).html(e.message);
+      container.html(e.message);
     }
   });
 }
@@ -966,6 +980,30 @@ function efectuarPagoTutoria(token) {
       cargaPagina('data/success.html');
     } else {
       alert(resp.msg);
+    }
+  })
+  .fail(function (e) {
+    alert('Error: ' + e.message);
+  });
+}
+
+function pagarConGuardadaTutoria(event) {
+  var data = {
+    amount: $('.js-checkout-total').val(),
+    token: $('.js-bt-token').val(),
+    nickname: $('.js-nickname').val(),
+    id: $('.js-id-solicitud').val()
+  };
+  var ajax = $.ajax({
+    type: 'post',
+    url: waooserver + '/solicitudes/procesarPagoTutoria',
+    dataType: 'json',
+    data: data
+  });
+  ajax.done(function (resp) {
+    alert(resp.msg);
+    if (resp.msg.indexOf('error') == -1) {
+      cargaPagina('data/success.html');
     }
   })
   .fail(function (e) {
