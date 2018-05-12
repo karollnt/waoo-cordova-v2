@@ -15,8 +15,8 @@ var elements = stripe.elements();
 var card;
 
 //backend server address
-// var waooserver = "http://waoo.herokuapp.com";
-var waooserver = "http://localhost/waoobackend";
+var waooserver = "http://waoo.herokuapp.com";
+// var waooserver = "http://localhost/waoobackend";
 //para notificaciones
 var tareanotificaciones = null;
 
