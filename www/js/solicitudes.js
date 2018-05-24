@@ -824,10 +824,10 @@ function crearTutoria(event) {
       data: form.serialize()
     });
     ajax.done(function (response) {
-      if (json.msg == 'ok') {
+      if (response.msg == 'ok') {
         cargaPagina('data/success.html');
       } else {
-        alert(json.msg);
+        alert(response.msg);
       }
     });
   }
@@ -976,7 +976,7 @@ function efectuarPagoTutoria(token) {
     data: data
   });
   ajx.done(function (resp) {
-    if (resp.msg.indexOf('Pago recibido satisfactoriamente') > -1) {
+    if (!resp.error) {
       cargaPagina('data/success.html');
     } else {
       alert(resp.msg);

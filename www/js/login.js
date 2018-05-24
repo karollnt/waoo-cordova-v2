@@ -61,9 +61,11 @@ function register(){
     dataType: "json",
     data: datos,
     success: function(resp) {
-      window.localStorage.setItem("nickname", userNick.val());
-      window.localStorage.removeItem("devToken");
-      actualizarTokenRegistro(userNick.val());
+      if (resp.msg.indexOf('Informaci') > -1) {
+        window.localStorage.setItem("nickname", userNick.val());
+        window.localStorage.removeItem("devToken");
+        actualizarTokenRegistro(userNick.val());
+      }
       alert(resp.msg);
     },
     error: function(e) {
@@ -73,8 +75,8 @@ function register(){
 }
 
 function register2(){
-  var userNick = $(".js-assistant-reg");
-  userNick.val(userNick.val().toLowerCase());
+  var userNames = $.trim($(".js-assistant-name").val() + '-' + $(".js-assistant-surname").val()).toLowerCase().replace(/\s+/, '-');
+  $(".js-assistant-reg").val(userNames);
   var formData = new FormData( $("#RegisterForm2")[0]);
   $.ajax({
     type: "post",
@@ -86,9 +88,11 @@ function register2(){
     processData: false,
     success: function(resp) {
       var json = JSON.parse(resp);
-      window.localStorage.setItem("nickname", userNick.val());
-      window.localStorage.removeItem("devToken");
-      actualizarTokenRegistro(userNick.val());
+      if (json.msg.indexOf('Informaci') > -1) {
+        window.localStorage.setItem("nickname", userNames);
+        window.localStorage.removeItem("devToken");
+        actualizarTokenRegistro(userNames);
+      }
       alert(json.msg);
     },
     error: function(e) {
