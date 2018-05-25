@@ -946,7 +946,7 @@ function verDetalleTutoria(event) {
           });
           container.find('ul').html(html);
           $('.stars').stars();
-          $('html,body').animate({
+          $('.js-streaming-container').animate({
             scrollTop: 0
           }, 'slow');
         }
@@ -1005,6 +1005,63 @@ function pagarConGuardadaTutoria(event) {
     if (resp.msg.indexOf('error') == -1) {
       cargaPagina('data/success.html');
     }
+  })
+  .fail(function (e) {
+    alert('Error: ' + e.message);
+  });
+}
+
+function cargarMateriasSuscripcionStreaming() {
+  var container = $('.js-materias-contenedor');
+  container.html('Buscando');
+  var ajax = $.ajax({
+    type: 'get',
+    url: waooserver + '/solicitudes/cargarMateriasSuscripcionStreaming',
+    dataType: 'json',
+    data: { nickname: window.localStorage.getItem('nickname') }
+  });
+  ajax.done(function (resp) {
+    var html = '';
+    for (var i = 0; i < resp.results.length; i++) {
+      var element = resp.results[i];
+      html += "<label class='label-checkbox item-content' style='display:inline;'>" +
+        "<input type='checkbox' id='mat_" + i + "' name='mat_" + i + "' value='" + element.idmateria + "'" + (element.escogido ? ' checked' : '') + "> " +
+        "<div class='item-media'>" +
+          "<i class='icon icon-form-checkbox'></i>" +
+        "</div>" +
+        "<div class='item-inner'>" +
+          "<div class='item-title'> " + element.nombre + "</div>" +
+        "</div>"
+      '</label>';
+    }
+    if (html !== '') {
+      html = '<form class="js-save-streaming-notification">' +
+        '<input type="hidden" name="items" value="' + resp.results.length + '">' +
+        html +
+        '<div><input type="submit" name="submit" class="form_submit js-submit-notification" id="submit" value="Guardar" /></div>' +
+      '</form>';
+    }
+    container.html(html);
+  })
+  .fail(function (e) {
+    alert('Error: ' + e.message);
+  });
+}
+
+function guardarNotificacionesStreaming(ev) {
+  var form = ev.target;
+  ev.preventDefault();
+  var button = $('.js-submit-notification');
+  var ajax = $.ajax({
+    type: 'post',
+    url: waooserver + '/solicitudes/guardarNotificacionesStreaming',
+    dataType: 'json',
+    data: $(form).serialize()
+  });
+  button.prop('disabled', true).val('Enviando');
+  ajax.done(function (resp) {
+    alert(resp.msg);
+    button.prop('disabled', false).val('Guardar');
   })
   .fail(function (e) {
     alert('Error: ' + e.message);

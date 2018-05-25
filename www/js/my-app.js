@@ -222,6 +222,11 @@ function cargaPagina(url, num, params) {
           obtenerBToken();
         }, 1000);
         break;
+      case 13:
+        setTimeout(function() {
+          cargarMateriasSuscripcionStreaming();
+        }, 1100);
+        break;
 			default:
 				break;
 		}
@@ -356,7 +361,8 @@ jQuery(document).ready(function() {
     .on('change', '.js-list-streaming', function (e) {
       listarTutorias($(this).val());
     })
-    .on('click', '.js-show-streaming-details', verDetalleTutoria);
+    .on('click', '.js-show-streaming-details', verDetalleTutoria)
+    .on('submit', '.js-save-streaming-notification', guardarNotificacionesStreaming);
 
 	$(".logo").animate({'top': '20px'},'slow',"easeInOutCirc");
 	$(".cartitems").delay(1000).animate({'width': '30px', 'height': '30px', 'top':'10px', 'right':'10px', 'opacity':1},1000,"easeOutBounce");
