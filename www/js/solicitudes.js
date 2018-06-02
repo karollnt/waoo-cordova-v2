@@ -1022,8 +1022,9 @@ function cargarMateriasSuscripcionStreaming() {
   });
   ajax.done(function (resp) {
     var html = '';
-    for (var i = 0; i < resp.results.length; i++) {
-      var element = resp.results[i];
+    var results = JSON.parse(resp.results);
+    for (var i = 0; i < results.length; i++) {
+      var element = results[i];
       html += "<label class='label-checkbox item-content' style='display:inline;'>" +
         "<input type='checkbox' id='mat_" + i + "' name='mat_" + i + "' value='" + element.idmateria + "'" + (element.escogido ? ' checked' : '') + "> " +
         "<div class='item-media'>" +
