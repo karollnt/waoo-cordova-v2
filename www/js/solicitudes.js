@@ -1026,7 +1026,7 @@ function cargarMateriasSuscripcionStreaming() {
     for (var i = 0; i < results.length; i++) {
       var element = results[i];
       html += "<label class='label-checkbox item-content' style='display:inline;'>" +
-        "<input type='checkbox' id='mat_" + i + "' name='mat_" + i + "' value='" + element.idmateria + "'" + (element.escogido ? ' checked' : '') + "> " +
+        "<input type='checkbox' id='mat_" + i + "' name='mat_" + i + "' value='" + element.id + "'" + (element.escogido ? ' checked' : '') + "> " +
         "<div class='item-media'>" +
           "<i class='icon icon-form-checkbox'></i>" +
         "</div>" +
@@ -1037,7 +1037,8 @@ function cargarMateriasSuscripcionStreaming() {
     }
     if (html !== '') {
       html = '<form class="js-save-streaming-notification">' +
-        '<input type="hidden" name="items" value="' + resp.results.length + '">' +
+        '<input type="hidden" name="items" value="' + results.length + '">' +
+        '<input type="hidden" name="nickname" value="' + window.localStorage.getItem("nickname") + '">' +
         html +
         '<div><input type="submit" name="submit" class="form_submit js-submit-notification" id="submit" value="Guardar" /></div>' +
       '</form>';
